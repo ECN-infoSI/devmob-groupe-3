@@ -1,6 +1,8 @@
 package com.example.testappprojetdevmo
 
+import android.graphics.Paint.Align
 import androidx.compose.foundation.background
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -34,6 +36,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -43,19 +46,22 @@ import androidx.compose.ui.unit.sp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PartitionListScreen() {
+fun MusicScreen(
+    navController: NavHostController = rememberNavController(),
+    navController: NavHostController = rememberNavController()
+) {
     // Données de test pour les partitions
     val partitions = listOf(
-        Partition("Sonate au Clair de Lune", "Beethoven", "Classique", 4),
-        Partition("Nocturne Op. 9 No. 2", "Chopin", "Romantique", 3),
-        Partition("Gymnopédie No. 1", "Erik Satie", "Impressionniste", 2),
-        Partition("Lettre à Élise", "Beethoven", "Classique", 3),
-        Partition("Prélude en Do Majeur", "Bach", "Baroque", 2),
-        Partition("Rêverie", "Debussy", "Impressionniste", 4),
-        Partition("La Campanella", "Liszt", "Romantique", 5),
-        Partition("Arabesque No. 1", "Debussy", "Impressionniste", 3),
-        Partition("Invention No. 1", "Bach", "Baroque", 2),
-        Partition("Valse de l'Adieu", "Chopin", "Romantique", 4)
+        Partition("Sonate au Clair de Lune", "Beethoven", "Classique", R.drawable.moonlight),
+        Partition("Nocturne Op. 9 No. 2", "Chopin", "Romantique", R.drawable.nocturne),
+        Partition("Gymnopédie No. 1", "Erik Satie", "Impressionniste", R.drawable.gymnopedie),
+        Partition("Lettre à Élise", "Beethoven", "Classique", R.drawable.elise),
+        Partition("Prélude en Do Majeur", "Bach", "Baroque", R.drawable.prelude),
+        Partition("Rêverie", "Debussy", "Impressionniste", R.drawable.reverie),
+        Partition("La Campanella", "Liszt", "Romantique", R.drawable.campanella),
+        Partition("Arabesque No. 1", "Debussy", "Impressionniste", R.drawable.arabesque),
+        Partition("Invention No. 1", "Bach", "Baroque", R.drawable.invention),
+        Partition("Valse de l'Adieu", "Chopin", "Romantique", R.drawable.valse)
     )
 
     // État pour suivre l'élément de navigation sélectionné
@@ -72,32 +78,36 @@ fun PartitionListScreen() {
             )
         },
         bottomBar = {
-            NavigationBar {
+            NavigationBar (
+                modifier  = Modifier
+                    .fillMaxWidth()
+                    .height(100.dp)
+            ){
                 // Accordeur
                 NavigationBarItem(
-                    icon = { Icon(painter = painterResource(id = R.drawable.tuning_fork), contentDescription = "Accordeur") },
-                    label = { Text("Accordeur") },
+                    modifier = Modifier.weight(1f),
+                    icon = { Icon(painter = painterResource(id = R.drawable.tuning_fork), contentDescription = "Accordeur", Modifier.size(70.dp)) },
                     selected = selectedTab == 0,
                     onClick = { selectedTab = 0 }
                 )
                 // Liste de partitions
                 NavigationBarItem(
-                    icon = { Icon(painter = painterResource(id = R.drawable.partitions), contentDescription = "Partitions") },
-                    label = { Text("Partitions") },
+                    modifier = Modifier.weight(1f),
+                    icon = { Icon(painter = painterResource(id = R.drawable.partitions), contentDescription = "Partitions", Modifier.size(70.dp)) },
                     selected = selectedTab == 1,
                     onClick = { selectedTab = 1 }
                 )
                 // Exercices
                 NavigationBarItem(
-                    icon = { Icon(painter = painterResource(id = R.drawable.notebook), contentDescription = "Exercices") },
-                    label = { Text("Exercices") },
+                    modifier = Modifier.weight(1f),
+                    icon = { Icon(painter = painterResource(id = R.drawable.notebook), contentDescription = "Exercices", Modifier.size(70.dp)) },
                     selected = selectedTab == 2,
                     onClick = { selectedTab = 2 }
                 )
                 // Enregistreur
                 NavigationBarItem(
-                    icon = { Icon(painter = painterResource(id = R.drawable.microphone), contentDescription = "Enregistreur") },
-                    label = { Text("Enregistreur") },
+                    modifier = Modifier.weight(1f),
+                    icon = { Icon(painter = painterResource(id = R.drawable.microphone), contentDescription = "Enregistreur", Modifier.size(70.dp)) },
                     selected = selectedTab == 3,
                     onClick = { selectedTab = 3 }
                 )
@@ -165,20 +175,15 @@ fun PartitionItem(partition: Partition) {
                 .padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Icône ou image de la partition
-            Box(
+            // Image de la partition avec l'identifiant de ressource spécifique
+            Image(
+                painter = painterResource(id = partition.imageResId),
+                contentDescription = "Image de ${partition.title}",
                 modifier = Modifier
                     .size(60.dp)
-                    .clip(RoundedCornerShape(4.dp))
-                    .background(MaterialTheme.colorScheme.secondaryContainer),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.partitions),
-                    contentDescription = "Description",
-                    modifier = Modifier.size(24.dp)
-                )
-            }
+                    .clip(RoundedCornerShape(4.dp)),
+                contentScale = ContentScale.Crop
+            )
 
             Spacer(modifier = Modifier.width(16.dp))
 
@@ -215,7 +220,7 @@ data class Partition(
     val title: String,
     val composer: String,
     val genre: String,
-    val difficulty: Int // 1-5
+    val imageResId: Int // Identifiant de ressource pour l'image (R.drawable.xxx)
 )
 
 // Prévisualisation
@@ -223,6 +228,6 @@ data class Partition(
 @Composable
 fun PartitionListScreenPreview() {
     MaterialTheme {
-        PartitionListScreen()
+        MusicScreen()
     }
 }
