@@ -27,6 +27,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -260,9 +261,10 @@ data class Partition(
 fun PartitionDetailScreen(partition: Partition, navController: NavController) {
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text(partition.title) },
+            CenterAlignedTopAppBar(  // Utilisation de CenterAlignedTopAppBar pour faciliter le centrage
+                title = { /* Pas de titre */ },
                 navigationIcon = {
+                    // Icône de retour maintenue à gauche
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
                             imageVector = Icons.Default.ArrowBack,
@@ -270,7 +272,36 @@ fun PartitionDetailScreen(partition: Partition, navController: NavController) {
                         )
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(
+                actions = {
+                    // Utilisation d'un Row avec espacement dans les actions
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.padding(end = 16.dp)  // Ajoute un peu d'espace à droite
+                    ) {
+                        IconButton(onClick = { }) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.volume),
+                                contentDescription = "Volume"
+                            )
+                        }
+
+                        IconButton(onClick = { }) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.play),
+                                contentDescription = "Play"
+                            )
+                        }
+
+                        IconButton(onClick = { }) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.instrument),
+                                contentDescription = "Record"
+                            )
+                        }
+                    }
+                },
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                     titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
                 )
