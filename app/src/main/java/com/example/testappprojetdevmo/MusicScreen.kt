@@ -28,6 +28,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -43,13 +45,12 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHost
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MusicScreen(
-    navController: NavHostController = rememberNavController(),
-    navController: NavHostController = rememberNavController()
-) {
+fun MusicScreen() {
+    val navController = rememberNavController()
     // Données de test pour les partitions
     val partitions = listOf(
         Partition("Sonate au Clair de Lune", "Beethoven", "Classique", R.drawable.moonlight),
@@ -128,7 +129,16 @@ fun MusicScreen(
                 ) {
                     Text("Écran Accordeur (Non implémenté)")
                 }
-                1 -> PartitionList(partitions)
+                1 -> {
+                    NavHost(
+                        navController = navController,
+                        startDestination = "partition_list"
+                    ) {
+                        composable("partition_list") {
+                            PartitionList(partitions, navController)
+                        }
+                    }
+                }
                 2 -> Box(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
